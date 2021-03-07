@@ -1,0 +1,10 @@
+<h1>Accounts</h1>
+{{#if accounts.length}}
+<ul>
+    {{#each accounts}}
+    <li><a href="/accounts/{{id}}">{{name}}</a></li>
+    {{/each}}
+</ul>
+{{else}}
+<p>There are no accounts to display.</p>
+{{/if}}
