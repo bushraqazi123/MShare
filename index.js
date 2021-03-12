@@ -1,24 +1,32 @@
-const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const exphbs = require('express-handlebars');
-var request = require('request');
+const express = require('express')
+const app = express()
+const bodyParser = require('body-parser')
+const exphbs = require('express-handlebars')
+var request = require('request')
+const { response } = require('express')
+
+const port = 8900
+app.listen(port)
+console.log(`Listening to server: http://localhost:${port}`)
+//console.clear()
 
 //accounts
 const accounts = [{
     id: 1,
     name: "Selena",
-    likes: "country"
+    favorite: "country"
 }, {
     id: 2,
     name: "Enrique",
-    likes: "hardrock"
+    favorite: "hardrock"
 
 }]
 
-//app.use(express.static(dirname + "/public"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+//app.use(bodyParser.json());
+//app.use(function(req, res){(bodyParser.urlencoded({extended: false}))})
+
+app.use(express.static("static"))
+app.use(bodyParser.urlencoded({extended: false}))
 
 //Handlebars setting
 app.set("view engine","hbs");
@@ -27,14 +35,11 @@ app.engine('.hbs',exphbs({
     defaultLayout: 'index.hbs',
 }));
 
-const port = 8900;
-app.listen(port);
-console.log(`Listening to server: http://localhost:${port}`);
-//console.clear();
 
+app.get("/layout.css")
 
 /////landing page///////
-app.get('/', (req,res)=>{
+app.get('/', function(req, res){
 res.render("home.hbs");
 
 })
@@ -55,7 +60,29 @@ app.get("/accounts", (req,res)=>{
     res.render("accounts.hbs", model)
 })
 
-app.get("/accounts/:id", (req,res)=>{
+app.get("/signup", function(req, res){
+
+    res.render("signup.hbs")
+})
+
+app.post("/signup", function(request, response){
+
+    const name = request.body.username
+    const favorite = request.body.favoritegenre
+
+    const account = {
+        name,
+        favorite,
+        id: accounts.length + 1
+    }
+
+    accounts.push(account)
+
+    response.redirect("/accounts/"+account.id)
+
+})
+
+app.get("/accounts/:id", function(request,response){
 
     const id = request.params.id
 
@@ -66,5 +93,5 @@ app.get("/accounts/:id", (req,res)=>{
     const model = {
         account
     }
-    res.render("account.hbs", model)
+    response.render("account.hbs", model)
 })
