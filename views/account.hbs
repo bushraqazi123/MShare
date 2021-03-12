@@ -1,4 +1,12 @@
 <h1>Profile</h1>
+
 <P>ID: {{account.id}}</P>
 <p>Name: {{account.name}}</p>
 <p>Favorite Genre: {{account.favorite}}</p>
+
+<a href="/edit-account/{{account.id}}">Edit Account</a>
+
+<form action="/delete-account/{{account.id}}" method="POST">
+<input type="submit" value="Delete Account">
+</form>
+

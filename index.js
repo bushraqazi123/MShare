@@ -22,6 +22,8 @@ const accounts = [{
 
 }]
 
+//let nextaccountId = 3
+
 //app.use(bodyParser.json());
 //app.use(function(req, res){(bodyParser.urlencoded({extended: false}))})
 
@@ -82,7 +84,51 @@ app.post("/signup", function(request, response){
 
 })
 
-app.get("/accounts/:id", function(request,response){
+app.get("/edit-account/:id", function(request, response){
+
+    const id = request.params.id
+
+    const account = accounts.find(
+        acc=> acc.id == id
+    )
+
+    const model = {
+        account
+    }
+
+    response.render("edit-account.hbs", model)
+})
+
+app.post("/edit-account/:id", function(request, response){
+    const id = request.params.id
+    const newName = request.body.name
+    const newFav = request.body.favoritegenre
+
+    const account = accounts.find(
+        acc => acc.id == id
+    )
+    account.name =newName
+    account.favorite = newFav
+
+    response.redirect("/edit-account/"+id)
+
+})
+
+app.post("/delete-account/:id", function(request, response){
+
+const id = request.params.id
+
+const accountIndex = accounts.findIndex(
+    acc => acc.id == id
+)
+
+accounts.splice(accountIndex, 1)
+
+response.redirect("/accounts")
+
+})
+
+app.get("/accounts/:id", function(request, response){
 
     const id = request.params.id
 
