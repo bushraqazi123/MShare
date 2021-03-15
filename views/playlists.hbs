@@ -1,0 +1,10 @@
+<h1>Your Playlists</h1>
+{{#if playlists.length}}
+<ul>
+    {{#each playlists}}
+    <li><a href="/your-playlists/{{trackid}}">{{trackid}}</a></li>
+    {{/each}}
+</ul>
+{{else}}
+<p>There are no playlists created yet.</p>
+{{/if}}

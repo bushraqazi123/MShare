@@ -1,0 +1,12 @@
+<h1>Playlist Details</h1>
+
+<P>Track ID: {{playlist.trackid}}</P>
+<P>Track: {{playlist.song}}</P>
+<p>Artist's Name: {{playlist.artist}}</p>
+<p>Genre: {{playlist.genre}}</p>
+
+<a href="/edit-playlist/{{playlist.id}}">Edit Playlist</a>
+
+<form action="/delete-playlist/{{playlist.trackid}}" method="POST">
+<input type="submit" value="Delete Playlist">
+</form>

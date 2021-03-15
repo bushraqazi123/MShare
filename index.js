@@ -22,10 +22,21 @@ const accounts = [{
 
 }]
 
-//let nextaccountId = 3
+//your playlists
+const playlists = [{
+    trackid: 1,
+    song: "Star Boy",
+    artist: "Weekend",
+    genre: "R&B"
+}, {
+    trackid: 2,
+    song: "Don't Start Now",
+    artist: "Dua Lipa",
+    genre: "Pop"
 
-//app.use(bodyParser.json());
-//app.use(function(req, res){(bodyParser.urlencoded({extended: false}))})
+}]
+
+//let nextaccountId = 3
 
 app.use(express.static("static"))
 app.use(bodyParser.urlencoded({extended: false}))
@@ -54,12 +65,20 @@ app.get("/contact", (req,res)=>{
     res.render("contact.hbs")
 })
 
-app.get("/accounts", (req,res)=>{
+app.get("/accounts", (req, res)=>{
 
     const model = {
         accounts
     }
     res.render("accounts.hbs", model)
+})
+
+app.get("/your-playlists", function(req, res){
+
+    const model2 = {
+        playlists
+    }
+    res.render("playlists.hbs", model2)
 })
 
 app.get("/signup", function(req, res){
@@ -83,6 +102,76 @@ app.post("/signup", function(request, response){
     response.redirect("/accounts/"+account.id)
 
 })
+
+app.get("/create-playlist", function(req, res){
+
+    res.render("create-playlist.hbs")
+})
+
+app.post("/create-playlist", function(request, response){
+
+    const song = request.body.track
+    const artist = request.body.trackartist
+    const genre = request.body.trackgenre
+
+    const playlist = {
+        song,
+        artist,
+        genre,
+        trackid: playlists.length + 1
+
+        
+    }
+
+    playlists.push(playlist)
+
+    response.redirect("/your-playlists/"+playlist.trackid)
+
+})
+
+app.post("/delete-playlist/:trackid", function(request, response){
+
+    const playlistIndex = playlists.findIndex(
+        play => play.trackid == trackid
+    )
+
+    playlists.splice(playlistIndex, 1)
+    
+    response.redirect("/your-playlists")
+    
+    })
+
+    app.get("/edit-playlist/:trackid", function(request, response){
+
+        const trackid = request.params.trackid
+    
+        const playlist = playlists.find(
+            play=> play.trackid == trackid
+        )
+    
+        const model2 = {
+            playlist
+        }
+    
+        response.render("edit-playlist.hbs", model2)
+    })
+    
+    app.post("/edit-playlist/:trackid", function(request, response){
+        const id = request.params.trackid
+        const newSong = request.body.song
+        const newArtist = request.body.artist
+        const newGenre = request.body.genre
+    
+        const playlist = playlists.find(
+            play => play.trackid == trackid
+        )
+        playlist.song = newSong
+        playlist.artist = newArtist
+        playlist.genre = newGenre
+    
+        response.redirect("/edit-playlist/"+trackid)
+    
+    })
 
 app.get("/edit-account/:id", function(request, response){
 
